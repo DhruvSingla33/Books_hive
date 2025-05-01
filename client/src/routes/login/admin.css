@@ -1,0 +1,19 @@
+/* admin.css */
+.booklink {
+    display: block; /* Change display to block to take the full width of the parent container */
+    text-decoration: none;
+    text-align: center;
+    height: 30px;
+    padding: 10px;
+    border: 2px solid #010812;
+    border-radius: 10px;
+    color: #d9e5f6;
+    margin-bottom: 10px; /* Add margin to separate the links vertically */
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  .booklink:hover {
+    background-color: #1c65ca;
+    color: #fff;
+  }
+  

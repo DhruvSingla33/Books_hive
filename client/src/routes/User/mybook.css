@@ -1,0 +1,69 @@
+.user-details-container {
+    background-color: #f4f4f4;
+    background: transparent;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  
+  .user-details-heading {
+    font-size: 28px;
+    color: #a30808;
+    margin-bottom: 20px;
+  }
+  
+  .user-info {
+    margin: 20px;
+  }
+  
+  .user-info h2 {
+    font-size: 24px;
+    color: #f6efef;
+  }
+  
+  .user-info p {
+    font-size: 16px;
+    font-weight: bolder;
+    color: #bcd4c2;
+    margin: 5px 0;
+  }
+  
+  .issued-books-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    margin-top: 20px;
+
+  }
+  
+  .issued-book {
+    width: 30%;
+    margin: 10px;
+    border: 1px solid #340202;
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(79, 3, 3, 0.1);
+    height: 490px;
+  }
+  
+  .book-link {
+    display: block;
+    text-decoration: none;
+    height: 490px;
+  }
+  
+  .book-thumbnail {
+    width: 100%;
+    height: auto; /* Adjust height as needed */
+  }
+  
+  .book-title {
+    font-size: 18px;
+    color: #f2eaea;
+    margin: 10px 0;
+  }
+  
