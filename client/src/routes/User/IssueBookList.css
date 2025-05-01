@@ -1,0 +1,45 @@
+/* IssueBookList.css */
+
+.issue-list {
+    font-family: Arial, sans-serif;
+    background-color: transparent; 
+    padding: 20px;
+  }
+  
+  .issue-list h1 {
+    font-size: 24px;
+    color: #e5f0f2;
+  }
+  
+  .issue-list ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .issue-list li {
+    display: flex;
+    justify-content: space-between; /* Spread items horizontally */
+    align-items: center;
+    border: 2px solid #0f1010;
+    margin: 10px 0;
+    padding: 10px;
+    background-color: #c5fce0;
+    color: #010311;
+  }
+  
+  .issue-list button {
+    background-color: transparent;
+    
+    border: 3px solid #011214;
+    color: #000d09;
+    /* border: none; */
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+  
+  .issue-list button:hover {
+    background-color: #022f09;
+    color: #e5f0f2;
+  }
+   /* IssueBookList.css */
+
