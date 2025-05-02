@@ -4,13 +4,15 @@ import './admin.css';
 // import AdminHome from "./adminHome";
 
 // import UserHome from "./userHome";
+const BASE_URL = "https://dev-minds-1.onrender.com";
+const endpoint = "/userdata";
 
 export default function UserDetails() {
   const [userData, setUserData] = useState("");
   const [admin, setAdmin] = useState(false);
 
   useEffect(() => {
-    fetch("http://localhost:8000/userdata", {
+    fetch(`${BASE_URL}${endpoint}`, {
       method: "POST",
       crossDomain: true,
       headers: {

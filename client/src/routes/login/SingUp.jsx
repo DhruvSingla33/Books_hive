@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./signup.css"; // Keep your CSS for responsiveness or shared styles
-
+const BASE_URL = "https://dev-minds-1.onrender.com";
+const endpoint = "/register";
 export default function SignUp() {
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
@@ -16,7 +17,7 @@ export default function SignUp() {
     } else if (userType === "Teacher" && secretKey !== "Teacher@123") {
       alert("Invalid Teacher");
     } else {
-      fetch("http://localhost:8000/register", {
+      fetch(`${BASE_URL}${endpoint}`, {
         method: "POST",
         crossDomain: true,
         headers: {

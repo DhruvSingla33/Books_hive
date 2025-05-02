@@ -7,7 +7,7 @@ export default function Login() {
   function handleSubmit(e) {
     e.preventDefault();
 
-    fetch("http://localhost:8000/login-user", {
+    fetch("https://dev-minds-1.onrender.com/login-user", {
       method: "POST",
       crossDomain: true,
       headers: {

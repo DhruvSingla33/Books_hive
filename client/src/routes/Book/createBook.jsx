@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import NoImageSelected from "../../assets/no-image-selected.jpg";
+const BASE_URL = "https://dev-minds-1.onrender.com";
+const endpoint = "/api/books";
 
 function CreateBook() {
   const [title, setTitle] = useState("");
@@ -33,7 +35,7 @@ function CreateBook() {
     setSubmitted(null);
 
     try {
-      const response = await fetch("http://localhost:8000/api/books", {
+      const response = await fetch(`${BASE_URL}${endpoint}`, {
         method: "POST",
         body: formData,
       });

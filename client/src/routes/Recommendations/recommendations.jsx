@@ -6,6 +6,9 @@ import { ContainerPropsProvider } from "@chakra-ui/react";
 
 function Recommendations() {
     const baseUrl = "http://localhost:8000/api/books";
+    const BASE_URL = "https://dev-minds-1.onrender.com";
+const endpoint = "/api/books";
+
     const [data, setData] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState("");
     const [searchTerm, setSearchTerm] = useState("");
@@ -160,7 +163,7 @@ function Recommendations() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                let url = baseUrl;
+                let url = `${BASE_URL}${endpoint}`;
                 if (selectedCategory) {
                     url += `?category=${selectedCategory}`;
                 }
