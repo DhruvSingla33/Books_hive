@@ -3,6 +3,8 @@ import { Link, useParams } from "react-router-dom"
 import { BsPencilSquare } from "react-icons/bs"
 import RateBook from "./rateBook";
 import './singlebook.css';
+const BASE_URL = "https://dev-minds-1.onrender.com";
+const endpoint = "/api/books/";
 
 function singleBook() {
     const [showComponent, setShowComponent] = useState(false);
@@ -16,7 +18,7 @@ function singleBook() {
   const [teacher,setTeacher ]= useState(false);
   const [data, setData] = useState([]);
   const { id } = useParams();
-  const baseUrl = `http://localhost:8000/api/books/${id}`;
+  const baseUrl = `${BASE_URL}${endpoint}${id}`;
   
 
   useEffect(() => {
@@ -181,7 +183,7 @@ function singleBook() {
   <div className="book-details">
     <div className="col-1">
       <img
-        src={`http://localhost:8000/uploads/${data?.thumbnail}`}
+        src={`${BASE_URL}/uploads/${data?.thumbnail}`}
         alt={data?.title}
         className="book-thumbnail"
       />

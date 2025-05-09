@@ -1,11 +1,12 @@
-
 const mongoose = require('mongoose');
+require('dotenv').config(); // Load environment variables
 
 const connectDB = async () => {
     try {
         mongoose.set('strictQuery', false);
 
-        const conn = await mongoose.connect('mongodb+srv://Dhruvsingla301:Ncsj4LY9A4JgkTQ9@cluster0.9c4jwum.mongodb.net/?retryWrites=true&w=majority&appName=bookhive', {
+        const conn = await mongoose.connect(process.env.MONGO_URI, {
+            // Good to add options for future-proofing
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
@@ -13,7 +14,7 @@ const connectDB = async () => {
         console.log(`Database Connected: ${conn.connection.host}`);
     } catch (error) {
         console.error('Database connection error:', error);
-        process.exit(1);
+        process.exit(1); // Exit process with failure
     }
 }
 
