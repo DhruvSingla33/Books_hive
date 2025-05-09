@@ -1,63 +1,61 @@
-<p align="center">
-  <img src="Images/logo.png" alt="DevMinds Logo" width="150"/>
-</p>
+# 📚 BooksHive
 
-<h1 align="center">🚀 DevMinds</h1>
-
-<p align="center">
-  <strong>A powerful platform to solve problems, visualize algorithms, and grow as a developer.</strong><br/>
-  Empowering students and mentors through coding, collaboration, and innovation.
-</p>
-
----
-<table>
-  <tr>
-    <td width="50%" valign="top">
-      <h2>🌟 Key Features</h2>
-      <ul>
-        <li>🧠 <strong>Algorithm Visualizer</strong><br/>Step-by-step visual explanations of popular algorithms.</li><br/>
-        <li>🐍 <strong>Python Online Judge</strong><br/>Solve coding problems with real-time evaluation.</li><br/>
-        <li>💻 <strong>Live Code Compiler</strong><br/>Run HTML, CSS, and JS instantly in the browser.</li><br/>
-        <li>🌐 <strong>Developer Community</strong><br/>Post, comment, and discuss with fellow students.</li><br/>
-        <li>🔐 <strong>JWT Role-based Auth</strong><br/>Secure login system for students and mentors.</li>
-      </ul>
-    </td>
-    <td width="50%">
-      <img src="Images/appHome.png" alt="DevMinds App Homepage" width="100%" />
-    </td>
-  </tr>
-</table>
-
+**Your one-stop e-book library platform for learning and collaboration.**  
+Bringing hybrid book recommendations, real-time communication, and role-based features to life.
 
 ---
 
+## 🌟 Key Features
 
-# 🖥️ Tech Stack
+- 📖 **Book Library**  
+  Browse, read, and manage a wide range of books.
 
-## 🚀 Frontend
+- 🧠 **Hybrid Recommendation System**  
+  Combines content-based and collaborative filtering to suggest personalized books.
+
+- 💬 **Real-time Chat**  
+  Socket.IO-based chat between teachers and students for smooth communication.
+
+- 👩‍🏫 **Role-Based Profiles**  
+  Admin, teacher, and student-specific dashboards and permissions using JWT authentication.
+
+- 📬 **Email Notifications**  
+  Nodemailer integration to send book issue confirmation emails to users.
+
+- 📝 **Ratings & Comments**  
+  Users can rate and review books to guide other readers.
+
+- 🧑‍🏫 **Teacher Profiles**  
+  View and manage teacher profiles including uploaded books and interaction history.
+
+---
+
+## 🖥️ Tech Stack
+
+### 🚀 Frontend
 
 <p align="left">
   <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React" />
-  <img src="https://img.shields.io/badge/React Router-CA4245?style=for-the-badge&logo=reactrouter&logoColor=white" alt="React Router" />
-  <img src="https://img.shields.io/badge/Redux-764ABC?style=for-the-badge&logo=redux&logoColor=white" alt="Redux" />
   <img src="https://img.shields.io/badge/Tailwind CSS-0EA5E9?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="TailwindCSS" />
-  <img src="https://img.shields.io/badge/Material UI-007FFF?style=for-the-badge&logo=mui&logoColor=white" alt="Material UI" />
-  <img src="https://img.shields.io/badge/CodeMirror-051C2C?style=for-the-badge&logo=codemirror&logoColor=white" alt="CodeMirror" />
+  <img src="https://img.shields.io/badge/Redux-764ABC?style=for-the-badge&logo=redux&logoColor=white" alt="Redux" />
+  <img src="https://img.shields.io/badge/React Router-CA4245?style=for-the-badge&logo=reactrouter&logoColor=white" alt="React Router" />
 </p>
 
-## 🛠️ Backend
+### 🛠️ Backend
 
 <p align="left">
   <img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white" alt="Node.js" />
   <img src="https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white" alt="Express.js" />
   <img src="https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white" alt="MongoDB" />
   <img src="https://img.shields.io/badge/Mongoose-800000?style=for-the-badge&logo=mongoose&logoColor=white" alt="Mongoose" />
+  <img src="https://img.shields.io/badge/Socket.IO-010101?style=for-the-badge&logo=socketdotio&logoColor=white" alt="Socket.IO" />
   <img src="https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white" alt="JWT" />
-  <img src="https://img.shields.io/badge/bcrypt.js-F4B400?style=for-the-badge&logo=lock&logoColor=black" alt="bcrypt.js" />
-  <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python" />
+  <img src="https://img.shields.io/badge/Nodemailer-3B3B3B?style=for-the-badge&logo=maildotru&logoColor=white" alt="Nodemailer" />
 </p>
 
 ---
+
+
 
 <!-- ## 📌 Features in Detail
 
