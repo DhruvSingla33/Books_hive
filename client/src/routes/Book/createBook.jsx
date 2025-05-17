@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import NoImageSelected from "../../assets/no-image-selected.jpg";
-const BASE_URL = "https://dev-minds-1.onrender.com";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const endpoint = "/api/books";
 
 function CreateBook() {

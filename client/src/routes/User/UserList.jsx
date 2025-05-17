@@ -4,9 +4,10 @@ import { Link } from "react-router-dom";
 const UserList = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-
+ 
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
   useEffect(() => {
-    fetch("http://localhost:8000/getdata")
+    fetch(`${BASE_URL}/getdata`)
       .then((res) => res.json())
       .then((data) => {
         if (data.status === "ok") {

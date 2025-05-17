@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import UserDetail from "./mybook";
 function UserDetailComponent() {
   const [userData, setUserData] = useState(null);
-
+  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
   useEffect(() => {
     // alert("hota");
-    fetch("http://localhost:8000/userData", {
+    fetch(`${BASE_URL}/userData`, {
       method: "POST",
       crossDomain: true,
       headers: {

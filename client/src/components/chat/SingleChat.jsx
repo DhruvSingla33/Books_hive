@@ -14,7 +14,8 @@ import Lottie from "react-lottie";
 import animationData from "../animations/typing.json";
 
 import io from "socket.io-client";
-const ENDPOINT = "http://localhost:8000"; // "https://talk-a-tive.herokuapp.com"; -> After deployment
+
+const ENDPOINT = import.meta.env.VITE_API_BASE_URL; // "https://talk-a-tive.herokuapp.com"; -> After deployment
 var socket;
 const user ={};
 const SingleChat = () => {
@@ -46,7 +47,7 @@ const SingleChat = () => {
   
       try {
         setLoading(true);
-        const { data } = await axios.get(`http://localhost:8000/api/message/${Chat._id}`);
+        const { data } = await axios.get(`${ENDPOINT}/api/message/${Chat._id}`);
         setMessages(data);
         setLoading(false);
         socket.emit("join chat", Chat._id);
@@ -74,7 +75,7 @@ const SingleChat = () => {
   useEffect(() => {
     
     
-      fetch("http://localhost:8000/userData", {
+      fetch(`${ENDPOINT}/userData`, {
         method: "POST",
         crossDomain: true,
         headers: {
@@ -105,7 +106,7 @@ const SingleChat = () => {
         if (!UserId || !id) return; // wait until both are available
     
         try {
-          const { data } = await axios.post("http://localhost:8000/chat", {
+          const { data } = await axios.post(`${ENDPOINT}/chat`, {
             userId: UserId,
             user2Id:id,
           });
@@ -154,7 +155,7 @@ const SingleChat = () => {
       
         setNewMessage("");
         try {
-          const { data } = await axios.post("http://localhost:8000/api/message", {
+          const { data } = await axios.post(`${ENDPOINT}/api/message`, {
             content: newMessage,
             chatId: Chat._id,
             userId:UserId,
@@ -192,13 +193,14 @@ const SingleChat = () => {
     }, timerLength);
   };
 return (<>
+{/* <> <h1>{User.fname} </h1></> */}
 <Box
   display="flex"
   flexDir="column"
   justifyContent="flex-end"
   p={3}
   bg="#E8E8E8"
-  w="100%"
+  w="99.5%"
   h="400px"           // 👈 fixed height here
   borderRadius="lg"
   overflowY="hidden"
@@ -228,13 +230,16 @@ return (<>
               ) : (
                 <></>
               )}
-              <Input
-                variant="filled"
-                bg="#E0E0E0"
-                placeholder="Enter a message.."
-                value={newMessage}
-                onChange={typingHandler}
-              />
+             <Input
+  variant="filled"
+  bg="blue.50" // or "#E3F2FD"
+  width="97%"
+  placeholder="Enter a message..."
+  value={newMessage}
+  onChange={typingHandler}
+ 
+/>
+
             </FormControl>
           </Box>
 </>)};

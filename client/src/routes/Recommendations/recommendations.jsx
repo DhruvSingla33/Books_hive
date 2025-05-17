@@ -6,7 +6,7 @@ import { ContainerPropsProvider } from "@chakra-ui/react";
 
 function Recommendations() {
     const baseUrl = "http://localhost:8000/api/books";
-    const BASE_URL = "https://dev-minds-1.onrender.com";
+    const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const endpoint = "/api/books";
 
     const [data, setData] = useState([]);
@@ -37,7 +37,7 @@ const endpoint = "/api/books";
         }
       
         const encodedBookName = encodeURIComponent(bookName2);
-        fetch(`http://127.0.0.1:5000/hybrid_recommend?book_name=${encodedBookName}`)
+        fetch(`${BASE_URL}/hybrid_recommend?book_name=${encodedBookName}`)
           .then((res) => {
             if (res.status === 404) {
               throw new Error("Book not found");
@@ -101,7 +101,7 @@ const endpoint = "/api/books";
         }
       
         const encodedBookName = encodeURIComponent(bookName1);
-        fetch(`http://127.0.0.1:5000/recommend1?book_name=${encodedBookName}`)
+        fetch(`${BASE_URL}/recommend1?book_name=${encodedBookName}`)
           .then((res) => {
             if (res.status === 404) {
               throw new Error("Book not found");

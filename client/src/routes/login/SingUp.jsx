@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import "./signup.css"; // Keep your CSS for responsiveness or shared styles
-const BASE_URL = "https://dev-minds-1.onrender.com";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const endpoint = "/register";
+   import { Link } from 'react-router-dom';
 export default function SignUp() {
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
@@ -175,9 +176,13 @@ export default function SignUp() {
 
           <p style={{ textAlign: "center", marginTop: "10px", fontSize: "0.9rem" }}>
             Already registered?{" "}
-            <a href="/sign-in" style={{ color: "#fff", textDecoration: "underline" }}>
-              Sign In
-            </a>
+          
+
+<Link to="/sign-in" style={{ color: "#fff", textDecoration: "underline" }}>
+  Sign In
+</Link>
+
+
           </p>
         </form>
       </div>

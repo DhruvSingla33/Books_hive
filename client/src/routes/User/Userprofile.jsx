@@ -7,11 +7,11 @@ function Userprofile() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { id } = useParams();
-
+ const BASE_URL = import.meta.env.VITE_API_BASE_URL;
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch(`http://localhost:8000/getuserdata/${id}`, {
+        const response = await fetch(`${ BASE_URL }/getuserdata/${id}`, {
           method: "POST",  // ✅ Keep POST if your backend requires it
           headers: {
             "Content-Type": "application/json",
@@ -62,7 +62,7 @@ function Userprofile() {
               <div key={book._id} className="issued-book">
                 <Link to={`/books/${book._id}`} className="book-link">
                   <img
-                    src={`http://localhost:8000/uploads/${book.thumbnail}`}
+                    src={`${BASE_URL}/uploads/${book.thumbnail}`}
                     alt={book.title}
                     className="book-thumbnail"
                   />

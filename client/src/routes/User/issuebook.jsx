@@ -3,10 +3,10 @@ import React, { useState, useEffect } from 'react';
 
 function IssueBookListComponent() {
   const [issueRequests, setIssueRequests] = useState([]);
-
+   const BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const handleDelete = (issueRequestId) => {
     // Send a DELETE request to the server to delete the issue request
-    fetch(`http://localhost:8000/api/issue-requests/${issueRequestId}`, {
+    fetch(`${BASE_URL}/api/issue-requests/${issueRequestId}`, {
       method: 'DELETE',
     })
       .then((response) => {
@@ -25,7 +25,7 @@ function IssueBookListComponent() {
   const handleIssue = (issueRequestId) => {
     // Send a DELETE request to the server to delete the issue request
     console.log("hiiiiiii");
-    fetch(`http://localhost:8000/api/issued/${issueRequestId}`, {
+    fetch(`${BASE_URL}/api/issued/${issueRequestId}`, {
       method: 'GET',
     })
       .then((response) => {
@@ -46,7 +46,7 @@ function IssueBookListComponent() {
 
   useEffect(() => {
     // Fetch issue book data from the server
-    fetch('http://localhost:8000/api/issue')
+    fetch(`${BASE_URL}/api/issue`)
       .then((response) => {
         if (!response.ok) {
           throw new Error('Network response was not ok');

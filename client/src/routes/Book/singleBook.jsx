@@ -3,7 +3,7 @@ import { Link, useParams } from "react-router-dom"
 import { BsPencilSquare } from "react-icons/bs"
 import RateBook from "./rateBook";
 import './singlebook.css';
-const BASE_URL = "https://dev-minds-1.onrender.com";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const endpoint = "/api/books/";
 
 function singleBook() {
@@ -37,8 +37,9 @@ function singleBook() {
             console.log(error);
         }
     }
+    // `${BASE_URL}/userData`
     fetchData();
-    fetch("http://localhost:8000/userData", {
+    fetch(`${BASE_URL}/userData`, {
       method: "POST",
       crossDomain: true,
       headers: {
@@ -89,7 +90,7 @@ function singleBook() {
 
 
         // console.log(email, password);
-        fetch("http://localhost:8000/issuebook", {
+        fetch(`${BASE_URL}/issuebook`, {
           method: "POST",
           crossDomain: true,
           headers: {
@@ -121,7 +122,7 @@ function singleBook() {
 
 
         // console.log(email, password);
-        fetch("http://localhost:8000/suggestbook", {
+        fetch(`${BASE_URL}/suggestbook`, {
           method: "POST",
           crossDomain: true,
           headers: {
@@ -147,9 +148,11 @@ function singleBook() {
             }
           });
       };
+     
       const postComment = async () => {
         console.log("hii");
-        const res = await fetch(`http://localhost:8000/api/books/${id}/comments`, {
+        console.log("comment");
+        const res = await fetch(`${BASE_URL}/api/books/${id}/comments`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -159,8 +162,9 @@ function singleBook() {
             text: commentText,
           }),
         });
-      
+         
         const result = await res.json();
+        console.log(result);
         if (result.message === "Comment added") {
           setCommentText("");
           setRefreshData(prev => !prev); // 🔁 trigger re-fetch
@@ -189,7 +193,7 @@ function singleBook() {
       />
         {data?.pdf && (
     <a
-      href={`http://localhost:8000/uploads/${data.pdf}`}
+      href={`${BASE_URL}/uploads/${data?.pdf}`}
       target="_blank"
       rel="noopener noreferrer"
       className="pdf-link"

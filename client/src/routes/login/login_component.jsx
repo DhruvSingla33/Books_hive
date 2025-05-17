@@ -1,13 +1,14 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const BASE_URL=import.meta.env.VITE_API_BASE_URL;
   function handleSubmit(e) {
     e.preventDefault();
 
-    fetch("https://dev-minds-1.onrender.com/login-user", {
+    fetch(`${BASE_URL}/login-user`, {
       method: "POST",
       crossDomain: true,
       headers: {
@@ -24,6 +25,7 @@ export default function Login() {
       .then((data) => {
         if (data.status === "ok") {
           alert("Login successful");
+          // console.log( data.data);
           window.localStorage.setItem("token", data.data);
           window.localStorage.setItem("loggedIn", true);
           window.localStorage.setItem("email", email);
@@ -116,9 +118,9 @@ export default function Login() {
 
           <p style={{ textAlign: "center", marginTop: "10px", fontSize: "0.9rem" }}>
             Don't have an account?{" "}
-            <a href="/Signup" style={{ color: "#fff", textDecoration: "underline" }}>
+            <Link to="/Signup" style={{ color: "#fff", textDecoration: "underline" }}>
               Sign Up
-            </a>
+            </Link>
           </p>
         </form>
       </div>

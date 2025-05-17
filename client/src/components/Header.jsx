@@ -35,6 +35,7 @@ function Header() {
                 <NavLink to="/popular">Popular</NavLink>
                 <NavLink to="/userDetails">Admin</NavLink>
                 <NavLink to="/mybookdetails">Details</NavLink>
+                 <NavLink to="/userChats">Chats</NavLink>
                 <button className="logout-button" onClick={logout}>
                   Log Out
                 </button>

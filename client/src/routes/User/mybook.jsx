@@ -3,9 +3,9 @@ import { Link } from "react-router-dom";
 
 function UserDetail(props) {
   const [userData, setUserData] = useState(null);
-
+   const BASE_URL = import.meta.env.VITE_API_BASE_URL;
   useEffect(() => {
-    fetch(`http://localhost:8000/getdata/${props.propValue}`, {
+    fetch(`${BASE_URL}/getdata/${props.propValue}`, {
       method: "POST",
       crossDomain: true,
       headers: {
@@ -120,7 +120,7 @@ function UserDetail(props) {
               <div key={book._id} style={bookCardStyle}>
                 <Link to={`/books/${book._id}`} style={linkStyle}>
                   <img
-                    src={`http://localhost:8000/uploads/${book.thumbnail}`}
+                    src={`${BASE_URL}/uploads/${book.thumbnail}`}
                     alt={book.title}
                     style={thumbnailStyle}
                   />

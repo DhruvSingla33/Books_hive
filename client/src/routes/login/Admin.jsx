@@ -4,7 +4,7 @@ import './admin.css';
 // import AdminHome from "./adminHome";
 
 // import UserHome from "./userHome";
-const BASE_URL = "https://dev-minds-1.onrender.com";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const endpoint = "/userdata";
 
 export default function UserDetails() {

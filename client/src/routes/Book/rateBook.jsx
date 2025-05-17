@@ -6,12 +6,13 @@ function RateBook({ userId }) {
   const { id } = useParams();  // book ID from route
   const [rating, setRating] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
   const rateBook = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await fetch(`http://localhost:8000/api/books/${id}/rate`, {
+      const response = await fetch(`${BASE_URL}/api/books/${id}/rate`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

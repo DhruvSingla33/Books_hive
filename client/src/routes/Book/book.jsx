@@ -9,7 +9,8 @@ import TeacherLogin from "../../components/TeacherLogin";
 // const jwt = require('jsonwebtoken');
 
 function Book() {
-    const baseUrl = "http://localhost:8000/api/books";
+    const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+    const baseUrl = `${BASE_URL}/api/books`;
     const [data, setData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -125,7 +126,7 @@ function Book() {
                 <li key={item._id}>
                 {isLog ? (<Link to={`/books/${item.slug}`}>
                     <img
-                    src={`http://localhost:8000/uploads/${item.thumbnail}`}
+                    src={`${BASE_URL}/uploads/${item.thumbnail}`}
                     alt={item.title}
                     />
                     <h3>{item.title}</h3>
@@ -133,7 +134,7 @@ function Book() {
                     (
                         <Link to={`/books/`}>
                             <img
-                            src={`http://localhost:8000/uploads/${item.thumbnail}`}
+                            src={`${BASE_URL}/uploads/${item.thumbnail}`}
                             alt={item.title}
                             />
                             <h3>{item.title}</h3>

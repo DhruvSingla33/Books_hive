@@ -1,9 +1,15 @@
 require("dotenv").config();
 const mongoose = require("mongoose");
-const cors= require("cors");
 const express = require("express");
 const connectDB = require("./connectDB");
 const Book = require("./models/Books");
+
+
+
+const fs = require('fs');
+const csv = require('csv-parser');
+const cors = require('cors');
+const cosineSimilarity = require('ml-distance').similarity.cosine;
 
 const Movie = require("./models/Movie");
 const Message = require("./models/Message");
@@ -13,9 +19,8 @@ const User = require("./userDetails");
 const IssueRequest = require('./issuedetail'); 
 const SuggestRequest = require('./suggestdetail'); 
 
-const fs = require('fs');
+
 const path = require('path');
-const csv = require('csv-parser');
 const bcrypt = require("bcryptjs");
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 const nodemailer = require('nodemailer');
@@ -44,7 +49,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 const app = express();
 app.set("view engine", "ejs");
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 5000;
 
 
 connectDB();
@@ -54,6 +59,215 @@ app.use(express.json());
 app.use("/uploads", express.static("uploads"));
 
 
+
+function readCSV(filePath) {
+  return new Promise((resolve, reject) => {
+    const results = [];
+    fs.createReadStream(filePath)
+      .pipe(csv())
+      .on('data', data => results.push(data))
+      .on('end', () => resolve(results))
+      .on('error', err => reject(err));
+  });
+}
+
+async function loadData() {
+  const books = await readCSV('./Books.csv');
+  const ratings = await readCSV('./Ratings.csv');
+
+  const ratingsWithName = ratings.map(r => {
+    const book = books.find(b => b.BookId === r.BookId);
+    return book ? { ...r, book_title: book.book_title } : null;
+  }).filter(Boolean);
+
+  // Pivot table creation
+  const pt = {};
+  ratingsWithName.forEach(r => {
+    const user = r.UserId;
+    const title = r.book_title;
+    const rating = parseFloat(r.Rating);
+    if (!pt[title]) pt[title] = {};
+    pt[title][user] = rating;
+  });
+
+  const bookTitles = Object.keys(pt);
+  const users = [...new Set(ratingsWithName.map(r => r.UserId))];
+
+  // Create matrix
+  const matrix = bookTitles.map(title => {
+    return users.map(user => pt[title][user] || 0);
+  });
+
+  return { books, bookTitles, users, matrix };
+}
+
+
+
+app.get('/books', async (req, res) => {
+  const books = await readCSV('./data/Books.csv');
+  const unique = [];
+  const seen = new Set();
+  for (let b of books) {
+    if (!seen.has(b.book_title)) {
+      seen.add(b.book_title);
+      unique.push({
+        book_title: b.book_title,
+        book_author: b.book_author,
+        image: b['Image-URL-M']
+      });
+    }
+    if (unique.length === 5) break;
+  }
+  res.json(unique);
+});
+
+app.get('/recommend', async (req, res) => {
+  const book_name = req.query.book_name;
+  if (!book_name) return res.status(400).json({ error: "Missing book_name parameter" });
+
+  try {
+    const { books, bookTitles, matrix } = await loadData();
+    const index = bookTitles.indexOf(book_name);
+    if (index === -1) return res.status(404).json({ error: "Book not found" });
+
+    const similarities = matrix.map((vec, i) => ({
+      index: i,
+      score: cosineSimilarity(matrix[index], vec)
+    }));
+
+    const top = similarities
+      .sort((a, b) => b.score - a.score)
+      .filter(s => s.index !== index)
+      .slice(0, 4);
+
+    const result = top.map(item => {
+      const book = books.find(b => b.book_title === bookTitles[item.index]);
+      return {
+        title: book.book_title,
+        author: book.book_author,
+        book_id: book.BookId
+      };
+    });
+
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Content-Based recommend1
+app.get('/recommend1', async (req, res) => {
+  console.log("content baseed recommendation query");
+  const book_name = req.query.book_name;
+  if (!book_name) return res.status(400).json({ error: "Missing book_name parameter" });
+
+ const books = await readCSV('./Books.csv');
+
+  const titles = books.map(b => b.book_title);
+  const index = titles.indexOf(book_name);
+  if (index === -1) return res.status(404).json({ error: "Book not found" });
+
+  const vectors = titles.map(title => {
+    const words = title.toLowerCase().split(' ');
+    const freq = {};
+    words.forEach(w => freq[w] = (freq[w] || 0) + 1);
+    return freq;
+  });
+
+  const vocab = [...new Set(titles.flatMap(t => t.toLowerCase().split(' ')))];
+
+  function toVec(freq) {
+    return vocab.map(word => freq[word] || 0);
+  }
+
+  const baseVec = toVec(vectors[index]);
+  const similarities = vectors.map((vec, i) => ({
+    index: i,
+    score: cosineSimilarity(baseVec, toVec(vec))
+  }));
+
+  const top = similarities
+    .sort((a, b) => b.score - a.score)
+    .filter(s => s.index !== index)
+    .slice(0, 10);
+
+  const result = top.map(item => {
+    const book = books[item.index];
+    return {
+      title: book.book_title,
+      author: book.book_author,
+      book_id: book.BookId
+    };
+  });
+
+  res.json(result);
+});
+
+// Hybrid
+app.get('/hybrid_recommend', async (req, res) => {
+  console.log("hybrid");
+  const book_name = req.query.book_name;
+  console.log(book_name);
+  if (!book_name) return res.status(400).json({ error: "Missing book_name parameter" });
+
+  try {
+    const { books, bookTitles, matrix } = await loadData();
+    const index = bookTitles.indexOf(book_name);
+    // if (index === -1) return res.status(404).json({ error: "Book not found" });
+
+    // Collaborative
+    const similarities = matrix.map((vec, i) => ({
+      index: i,
+      score: cosineSimilarity(matrix[index], vec)
+    }));
+    const collab = similarities.filter(s => s.index !== index).slice(0, 5);
+
+    // Content-Based
+    const titles = books.map(b => b.book_title);
+    const cbIndex = titles.indexOf(book_name);
+    const cbVectors = titles.map(title => {
+      const freq = {};
+      title.toLowerCase().split(' ').forEach(w => freq[w] = (freq[w] || 0) + 1);
+      return freq;
+    });
+
+    const vocab = [...new Set(titles.flatMap(t => t.toLowerCase().split(' ')))];
+    const cbVec = vocab.map(word => cbVectors[cbIndex][word] || 0);
+    const cbSimilarities = cbVectors.map((vec, i) => ({
+      index: i,
+      score: cosineSimilarity(cbVec, vocab.map(w => vec[w] || 0))
+    }));
+    const content = cbSimilarities.filter(s => s.index !== cbIndex).slice(0, 5);
+
+    // Combine
+    const scores = {};
+    collab.forEach(({ index, score }) => {
+      const title = bookTitles[index];
+      scores[title] = (scores[title] || 0) + score * 0.6;
+    });
+
+    content.forEach(({ index, score }) => {
+      const title = titles[index];
+      scores[title] = (scores[title] || 0) + score * 0.4;
+    });
+
+    const final = Object.entries(scores)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 10)
+      .map(([title]) => {
+        const book = books.find(b => b.book_title === title);
+        return {
+          title: book.book_title,
+          author: book.book_author,
+          book_id: book.BookId
+        };
+      });
+
+    res.json(final);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
 app.get("/api/movies", async (req, res) => {
   try {
@@ -100,6 +314,7 @@ app.post("/register", async (req, res) => {
   }
 });
 app.post("/login-user", async (req, res) => {
+  console.log("login request");
   const { email, password } = req.body;
 
   const user = await User.findOne({ email });

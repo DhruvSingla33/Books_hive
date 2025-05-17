@@ -6,7 +6,7 @@ function Userchat() {
   const [chats, setChats] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
   // Step 1: Get user ID from token
   useEffect(() => {
     const fetchUserId = async () => {
@@ -14,7 +14,7 @@ function Userchat() {
         const token = localStorage.getItem("token");
         if (!token) throw new Error("Token not found");
 
-        const res = await fetch("http://localhost:8000/userData", {
+        const res = await fetch(`${BASE_URL}/userData`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -43,7 +43,7 @@ function Userchat() {
       if (!userId) return;
 
       try {
-        const res = await fetch("http://localhost:8000/api/chats/byuserid", {
+        const res = await fetch(`${BASE_URL}/api/chats/byuserid`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

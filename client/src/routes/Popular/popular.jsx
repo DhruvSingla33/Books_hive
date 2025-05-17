@@ -3,7 +3,8 @@ import { Link } from "react-router-dom"
 
 
 function Popular() {
-    const baseUrl = "http://localhost:8000/api/books";
+     const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+    const baseUrl = `${BASE_URL}/api/books`;
     const [data, setData] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState("");
 
@@ -71,10 +72,10 @@ function Popular() {
             <li key={id}>
                 <Link to={`../books/${id}`}>
                 <img
-            src={`http://localhost:8000/uploads/${image}`}
+            src={`${BASE_URL}/uploads/${image}`}
             alt={title}
             />
-            <h4>{title} ➡️ {score} {rating_count},{rating} ⭐</h4>
+            <h4>{title} ➡️ {score}  ⭐</h4>
                                                 </Link>
             
             
