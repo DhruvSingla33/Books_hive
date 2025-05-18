@@ -1,4 +1,14 @@
 /* admin.css */
+.admin-page-wrapper {
+  min-height: 85vh; /* or 100vh if you want full view height */
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+
 .booklink {
     display: block; /* Change display to block to take the full width of the parent container */
     text-decoration: none;
@@ -16,4 +26,59 @@
     background-color: #1c65ca;
     color: #fff;
   }
-  
+  .not-admin-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 100px 20px;
+  text-align: center;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  max-width: 500px;
+  margin: 100px auto;
+}
+
+.not-admin-title {
+  font-size: 2rem;
+  color: #ff5252;
+  margin-bottom: 10px;
+}
+
+.not-admin-text {
+  font-size: 1.1rem;
+  color: #444;
+  margin-bottom: 30px;
+}
+
+.not-admin-buttons {
+  display: flex;
+  gap: 20px;
+}
+
+.not-admin-button {
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+.not-admin-button.home {
+  background-color: #2196f3;
+  color: white;
+}
+
+.not-admin-button.home:hover {
+  background-color: #1976d2;
+}
+
+.not-admin-button.signin {
+  background-color: #4caf50;
+  color: white;
+}
+
+.not-admin-button.signin:hover {
+  background-color: #388e3c;
+}

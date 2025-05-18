@@ -1,77 +1,109 @@
+/* Header container */
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: linear-gradient(to right, #2c3e50, #34495e);
-  padding: 20px 30px; /* Increased top & bottom padding */
-  color: white;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  position: sticky;
-  top: 0;
-  z-index: 1000;
+  background-color: #ffffff; /* white background */
+  padding: 15px 40px;
+  color: #333;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* subtle shadow for depth */
 }
 
+/* Logo section */
 .logo {
   display: flex;
   align-items: center;
-  font-size: 1.5rem;
-  font-weight: bold;
   text-decoration: none;
-  color: #fff;
-  gap: 10px;
+  color: #333;
+  font-weight: bold;
+  font-size: 1.5rem;
 }
 
 .logo-image {
-  width: 40px;
   height: 40px;
-  border-radius: 50%;
-  object-fit: cover;
+  margin-right: 10px;
 }
 
-.nav {
+/* Navigation links container */
+.nav-group {
+  display: flex;
+  gap: 30px;
+  align-items: center;
+}
+
+/* Link styles */
+.nav-group a {
+  color: #555; /* dark gray */
+  text-decoration: none;
+  font-weight: 600; /* bold text */
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+/* Hover effect: black text + blue underline */
+.nav-group a:hover {
+  color: #000; /* black */
+}
+
+.nav-group a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 0;
+  height: 2px;
+  background-color: #2196f3; /* blue */
+  transition: width 0.3s ease;
+}
+
+.nav-group a:hover::after {
+  width: 100%;
+}
+
+/* Right-aligned logout/register button */
+.auth-button {
   display: flex;
   align-items: center;
-  gap: 25px;
-}
-
-.nav a {
-  color: #ecf0f1;
-  text-decoration: none;
-  font-weight: 500;
-  padding: 6px 10px;
-  border-radius: 6px;
-  transition: all 0.2s ease-in-out;
-}
-
-.nav a:hover,
-.nav a.active {
-  background-color: rgba(255, 255, 255, 0.2);
-  color: #f1c40f;
 }
 
 .logout-button {
-  margin-left: 15px;
-  background-color: #e74c3c;
+  background-color: #ff5252;
   color: white;
-  padding: 6px 12px;
   border: none;
+  padding: 8px 14px;
   border-radius: 6px;
-  font-weight: bold;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
+  transition: background-color 0.3s ease;
 }
 
 .logout-button:hover {
-  background-color: #c0392b;
+  background-color: #e53935;
 }
 
-@media (max-width: 768px) {
-  .nav {
-    flex-wrap: wrap;
-    gap: 10px;
-  }
+.navregister {
+ color: #555; /* dark gray */
+  text-decoration: none;
+  font-weight: 600; /* bold text */
+  position: relative;
+  transition: color 0.3s ease;
+}
 
-  .logo {
-    font-size: 1.2rem;
-  }
+.navregister:hover {
+  color: #000; /* black */
+}
+
+.navregister::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 0;
+  height: 2px;
+  background-color: #2196f3; /* blue */
+  transition: width 0.3s ease;
+}
+
+.navregister:hover::after {
+  width: 100%;
 }

@@ -160,9 +160,9 @@ app.get('/recommend1', async (req, res) => {
   console.log("content baseed recommendation query");
   const book_name = req.query.book_name;
   if (!book_name) return res.status(400).json({ error: "Missing book_name parameter" });
-
+  console.log(book_name);
  const books = await readCSV('./Books.csv');
-
+ console.log(books);
   const titles = books.map(b => b.book_title);
   const index = titles.indexOf(book_name);
   if (index === -1) return res.status(404).json({ error: "Book not found" });
