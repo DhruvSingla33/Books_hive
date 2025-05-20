@@ -1,28 +1,39 @@
-import React from 'react'
-import nice from "./bookbg.jpg"
+import React from 'react';
+import './HomePage.css';
+import HeroImage from '../../assets/home01.png'; // replace with actual image path
+import { Features } from './Feature';
 
-function Home() {
+const Home = () => {
   return (
-    <div>
-        <h1 style={{color:"cyan"}}> Home </h1>
-        <p> This is your BookHives containing all possible books, you need to grow your knowledge. </p><br/>
-        <span style={{color:"lightgreen", "fontSize":"30px"}}>Why BookHives?</span><br/><br/>
-        <li>
-        <span style={{color:"cyan"}}><u>Time Efficiency:</u> </span> Students often have busy schedules. A smart library allows them to prebook books, saving time on physical visits.
-        </li>
-        <li>
-        <span style={{color:"cyan"}}><u>Course Overview:</u> </span> Online access provides a quick overview of course materials, helping students plan their studies more effectively.
-        </li>
-        <li>
-        <span style={{color:"cyan"}}><u>Teacher Guidelines:</u> </span> Having access to teacher guidelines and recommendations online ensures students stay aligned with course expectations.
-        </li>
-        <li>
-        <span style={{color:"cyan"}}><u>Ratings & Reviews:</u> </span> Students can benefit from ratings and reviews of books, aiding them in selecting the most relevant and high-quality resources for their studies.
-        </li> <br/>
-        <img src={nice} style={{ borderRadius: "5px", width: "1200px" }} alt="try" />
+    <>
+    <div className="hero-section">
+      <div className="hero-container">
+        {/* Left Side - Image */}
+        <div className="hero-image">
+          <img src={HeroImage} alt="Hero" />
+        </div>
 
+        {/* Right Side - Content */}
+        <div className="hero-content">
+          <h1>BooksHive – Redefining the Library Experience</h1>
+          <p>
+           Your one-stop e-book library platform for learning and collaboration.
+          </p>
+          <button className="cta-button">Get Consultation</button>
+        </div>
+      </div>
+
+      {/* SVG curve */}
+      <svg className="hero-curve" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 250">
+        <path
+          fill="#ffffff"
+          d="M0,160 C480,280 960,40 1440,160 L1440,320 L0,320 Z"
+        ></path>
+      </svg>
     </div>
-  )
-}
+    <Features> </Features>
+    </>
+  );
+};
 
 export default Home;

@@ -6,7 +6,7 @@ function editBook() {
   const navigate = useNavigate();
   const {id} = useParams();
   const baseUrl = `http://localhost:8000/api/books/${id}`;
-
+  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const [bookId, setBookId] = useState("");
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
@@ -86,16 +86,17 @@ function editBook() {
   };
 
   const removeBook = async (e, bookId) => {
+    
     e.preventDefault();
   
     try {
-      const response = await fetch(`http://localhost:8000/api/books/${id}`, {
+      const response = await fetch(`${BASE_URL}/api/books/${id}`, {
         method: "DELETE",
       });
      console.log(response );
       if (response.ok) {
-        console.log("Book removed.");
-        navigate("/books");
+        alert("Book removed.");
+        navigate("/");
       } else {
         console.error("Failed to delete book.");
       }

@@ -4,7 +4,7 @@ const express = require("express");
 const connectDB = require("./connectDB");
 const Book = require("./models/Books");
 
-
+const storage = require('./Cloudinary/index');
 
 const fs = require('fs');
 const csv = require('csv-parser');
@@ -97,30 +97,50 @@ async function loadData() {
   const matrix = bookTitles.map(title => {
     return users.map(user => pt[title][user] || 0);
   });
-
+   console.log(matrix);
   return { books, bookTitles, users, matrix };
 }
 
 
 
-app.get('/books', async (req, res) => {
-  const books = await readCSV('./data/Books.csv');
-  const unique = [];
-  const seen = new Set();
-  for (let b of books) {
-    if (!seen.has(b.book_title)) {
-      seen.add(b.book_title);
-      unique.push({
-        book_title: b.book_title,
-        book_author: b.book_author,
-        image: b['Image-URL-M']
-      });
-    }
-    if (unique.length === 5) break;
-  }
-  res.json(unique);
-});
 
+async function loadDataFromMongo() {
+  const books = await Book.find({}, '_id title ratings').lean();
+
+  const ratingsWithName = [];
+
+  books.forEach(book => {
+    book.ratings.forEach(r => {
+     ratingsWithName.push({
+        BookId: book._id.toString(),
+        UserId: r.userId.toString(),
+        Rating: r.rating,
+        book_title: book.title
+      });
+    });
+  });
+  
+
+    // Pivot table creation
+  const pt = {};
+  ratingsWithName.forEach(r => {
+    const user = r.UserId;
+    const title = r.book_title;
+    const rating = parseFloat(r.Rating);
+    if (!pt[title]) pt[title] = {};
+    pt[title][user] = rating;
+  });
+
+  const bookTitles = Object.keys(pt);
+  const users = [...new Set(ratingsWithName.map(r => r.UserId))];
+
+  // Create matrix
+  const matrix = bookTitles.map(title => {
+    return users.map(user => pt[title][user] || 0);
+  });
+   console.log(matrix);
+  return { books, bookTitles, users, matrix };
+}
 app.get('/recommend', async (req, res) => {
   const book_name = req.query.book_name;
   if (!book_name) return res.status(400).json({ error: "Missing book_name parameter" });
@@ -155,53 +175,111 @@ app.get('/recommend', async (req, res) => {
   }
 });
 
-// Content-Based recommend1
+
 app.get('/recommend1', async (req, res) => {
-  console.log("content baseed recommendation query");
-  const book_name = req.query.book_name;
-  if (!book_name) return res.status(400).json({ error: "Missing book_name parameter" });
-  console.log(book_name);
- const books = await readCSV('./Books.csv');
- console.log(books);
-  const titles = books.map(b => b.book_title);
-  const index = titles.indexOf(book_name);
-  if (index === -1) return res.status(404).json({ error: "Book not found" });
+  try {
+    console.log("Content-based recommendation query");
+    const book_name = req.query.book_name;
+    if (!book_name) return res.status(400).json({ error: "Missing book_name parameter" });
 
-  const vectors = titles.map(title => {
-    const words = title.toLowerCase().split(' ');
-    const freq = {};
-    words.forEach(w => freq[w] = (freq[w] || 0) + 1);
-    return freq;
-  });
+    const books = await Book.find({});
+    const titles = books.map(b => b.title.trim());
+    const index = titles.indexOf(book_name);
+  
 
-  const vocab = [...new Set(titles.flatMap(t => t.toLowerCase().split(' ')))];
+    if (index === -1) return res.status(404).json({ error: "Book not found" });
 
-  function toVec(freq) {
-    return vocab.map(word => freq[word] || 0);
+   
+    const vectors = titles.map(title => {
+      const words = title.toLowerCase().split(' ');
+      const freq = {};
+      words.forEach(w => freq[w] = (freq[w] || 0) + 1);
+      return freq;
+    });
+
+    const vocab = [...new Set(titles.flatMap(t => t.toLowerCase().split(/\s+/)))];
+   
+    function toVec(freq) {
+      return vocab.map(word => freq[word] || 0);
+    }
+
+    const baseVec = toVec(vectors[index]);
+    const similarities = vectors.map((vec, i) => ({
+      index: i,
+      score: cosineSimilarity(baseVec, toVec(vec))
+    }));
+
+    const top = similarities
+      .sort((a, b) => b.score - a.score)
+      .filter(s => s.index !== index)
+      .slice(0, 10);
+
+    const result = top.map(item => {
+      const book = books[item.index];
+      return {
+        title: book.title,
+        author: book.book_author,
+        book_id: book._id,
+        thumbnail: book.thumbnail,
+        rating: book.book_rating,
+      };
+    });
+
+    res.json(result);
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
   }
-
-  const baseVec = toVec(vectors[index]);
-  const similarities = vectors.map((vec, i) => ({
-    index: i,
-    score: cosineSimilarity(baseVec, toVec(vec))
-  }));
-
-  const top = similarities
-    .sort((a, b) => b.score - a.score)
-    .filter(s => s.index !== index)
-    .slice(0, 10);
-
-  const result = top.map(item => {
-    const book = books[item.index];
-    return {
-      title: book.book_title,
-      author: book.book_author,
-      book_id: book.BookId
-    };
-  });
-
-  res.json(result);
 });
+
+// Content-Based recommend1
+// app.get('/recommend1', async (req, res) => {
+//   console.log("content baseed recommendation query");
+//   const book_name = req.query.book_name;
+//   if (!book_name) return res.status(400).json({ error: "Missing book_name parameter" });
+//   console.log(book_name);
+//  const books = await readCSV('./Books.csv');
+//  console.log(books);
+//   const titles = books.map(b => b.book_title);
+//   const index = titles.indexOf(book_name);
+//   if (index === -1) return res.status(404).json({ error: "Book not found" });
+
+//   const vectors = titles.map(title => {
+//     const words = title.toLowerCase().split(' ');
+//     const freq = {};
+//     words.forEach(w => freq[w] = (freq[w] || 0) + 1);
+//     return freq;
+//   });
+
+//   const vocab = [...new Set(titles.flatMap(t => t.toLowerCase().split(' ')))];
+
+//   function toVec(freq) {
+//     return vocab.map(word => freq[word] || 0);
+//   }
+
+//   const baseVec = toVec(vectors[index]);
+//   const similarities = vectors.map((vec, i) => ({
+//     index: i,
+//     score: cosineSimilarity(baseVec, toVec(vec))
+//   }));
+
+//   const top = similarities
+//     .sort((a, b) => b.score - a.score)
+//     .filter(s => s.index !== index)
+//     .slice(0, 10);
+
+//   const result = top.map(item => {
+//     const book = books[item.index];
+//     return {
+//       title: book.book_title,
+//       author: book.book_author,
+//       book_id: book.BookId
+//     };
+//   });
+
+//   res.json(result);
+// });
 
 // Hybrid
 app.get('/hybrid_recommend', async (req, res) => {
@@ -211,9 +289,12 @@ app.get('/hybrid_recommend', async (req, res) => {
   if (!book_name) return res.status(400).json({ error: "Missing book_name parameter" });
 
   try {
-    const { books, bookTitles, matrix } = await loadData();
+    // const { books, bookTitles, matrix } = await loadData();
+     const { books, bookTitles, matrix } = await loadDataFromMongo();
+     console.log(matrix);
+     console.log(books);
     const index = bookTitles.indexOf(book_name);
-    // if (index === -1) return res.status(404).json({ error: "Book not found" });
+    if (index === -1) return res.status(404).json({ error: "Book not found" });
 
     // Collaborative
     const similarities = matrix.map((vec, i) => ({
@@ -221,9 +302,11 @@ app.get('/hybrid_recommend', async (req, res) => {
       score: cosineSimilarity(matrix[index], vec)
     }));
     const collab = similarities.filter(s => s.index !== index).slice(0, 5);
-
+    console.log(collab );
     // Content-Based
-    const titles = books.map(b => b.book_title);
+  
+     const titles = books.map(b => b.title);
+     console.log(titles);
     const cbIndex = titles.indexOf(book_name);
     const cbVectors = titles.map(title => {
       const freq = {};
@@ -238,7 +321,7 @@ app.get('/hybrid_recommend', async (req, res) => {
       score: cosineSimilarity(cbVec, vocab.map(w => vec[w] || 0))
     }));
     const content = cbSimilarities.filter(s => s.index !== cbIndex).slice(0, 5);
-
+     console.log(content);
     // Combine
     const scores = {};
     collab.forEach(({ index, score }) => {
@@ -250,19 +333,21 @@ app.get('/hybrid_recommend', async (req, res) => {
       const title = titles[index];
       scores[title] = (scores[title] || 0) + score * 0.4;
     });
-
+   
     const final = Object.entries(scores)
       .sort((a, b) => b[1] - a[1])
       .slice(0, 10)
       .map(([title]) => {
-        const book = books.find(b => b.book_title === title);
-        return {
-          title: book.book_title,
-          author: book.book_author,
-          book_id: book.BookId
-        };
+        const book = books.find(b => b.title === title);
+         return {
+        title: book.title,
+        author: book.book_author,
+        book_id: book._id,
+        thumbnail: book.thumbnail,
+        rating: book.book_rating,
+      };
       });
-
+    console.log(final);
     res.json(final);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -361,19 +446,28 @@ app.post("/userData", async (req, res) => {
 });
 app.get('/getdata', async (req, res) => {
   try {
-    const users = await User.find().populate("suggestBooks.bookId"); // Populate book details
+    console.log("hi");
+
+    
+    const users = await User.find().populate("suggestBooks.bookId");
 
     if (!users || users.length === 0) {
       return res.status(404).json({ message: "No users found" });
     }
 
-    const allUsersData = users.map(user => ({
-      userInfo: user,
-      suggestBooks: user.suggestBooks.map(suggestBook => ({
-        ...suggestBook.bookId.toObject(),  // Convert book to plain object
-        status: suggestBook.status,
-      }))
-    }));
+    const allUsersData = users.map(user => {
+    
+      const validSuggestedBooks = user.suggestBooks.filter(suggestBook => suggestBook.bookId !== null);
+
+      return {
+        userInfo: user,
+        suggestBooks: validSuggestedBooks.map(suggestBook => ({
+          ...suggestBook.bookId.toObject(),  
+          status: suggestBook.status        
+        }))
+      };
+    });
+
     console.log(allUsersData);
     return res.json({ status: "ok", data: allUsersData });
 
@@ -382,34 +476,37 @@ app.get('/getdata', async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 });
+
 app.post('/getuserdata/:id', async (req, res) => {
   try {
     const userId = req.params.id;
 
     console.log("Fetching user data...");
-    
-    // Corrected query
-    const user = await User.findOne({ _id: userId });
+
+    const user = await User.findById(userId); // More concise than findOne({ _id: userId })
 
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Get issued books
-    const suggestBooks = user.suggestBooks;
-    const bookIds = suggestBooks.map((suggestBook) => suggestBook.bookId);
+  
+    const suggestBooks = user.suggestBooks || [];
+    const bookIds = suggestBooks.map(s => s.bookId);
 
-    // Find books by bookId array
+    
     const books = await Book.find({ _id: { $in: bookIds } });
 
-    // Merge books with status
-    const booksWithStatus = suggestBooks.map((suggestBook) => {
-      const matchingBook = books.find((book) => book._id.equals(suggestBook.bookId));
-      return {
-        ...matchingBook.toObject(),
-        status: suggestBook.status,
-      };
-    });
+ 
+    const booksWithStatus = suggestBooks
+      .map(s => {
+        const book = books.find(b => b._id.equals(s.bookId));
+        if (!book) return null; 
+        return {
+          ...book.toObject(),
+          status: s.status
+        };
+      })
+      .filter(Boolean);
 
     const userData = {
       userInfo: user,
@@ -417,7 +514,6 @@ app.post('/getuserdata/:id', async (req, res) => {
     };
 
     console.log("User data fetched successfully", userData);
-
     return res.status(200).json({ status: "ok", data: userData });
 
   } catch (error) {
@@ -425,6 +521,7 @@ app.post('/getuserdata/:id', async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 });
+
 
 app.post("/api/chats/byuserid", async (req, res) => {
   const { userId } = req.body;
@@ -869,17 +966,18 @@ app.get("/api/books/:id", async (req, res) => {
 
 
  // Multer config
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'uploads/');
-  },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, uniqueSuffix + "-" + file.originalname);
-  }
-});
+// const storage = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     cb(null, 'uploads/');
+//   },
+//   filename: function (req, file, cb) {
+//     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+//     cb(null, uniqueSuffix + "-" + file.originalname);
+//   }
+// });
 
-const upload = multer({ storage: storage });
+const upload = multer({ storage });
+
 
 // Route to create a book with thumbnail + PDF
 app.post("/api/books", upload.fields([
@@ -889,34 +987,33 @@ app.post("/api/books", upload.fields([
   try {
     console.log(req.body);
     console.log(req.files);
-
+    console.log(req.body.category);
     const thumbnailFile = req.files['thumbnail'] ? req.files['thumbnail'][0] : null;
     const pdfFile = req.files['pdf'] ? req.files['pdf'][0] : null;
-
     const newBook = new Book({
       title: req.body.title,
       book_author: req.body.book_author,
       description: req.body.description,
-      category: req.body.category,
-      thumbnail: thumbnailFile ? thumbnailFile.filename : null,
-      pdf: pdfFile ? pdfFile.filename : null, // store PDF filename
+      category: req.body.category.split(',').map(item => item.trim()),
+      thumbnail: thumbnailFile ? thumbnailFile.path : null, 
+      pdf: pdfFile ? pdfFile.path : null,                  
       book_rating: 0,
       rating_count: 0,
-    });
-
+    })
+    console.log( newBook );
     await newBook.save();
 
-    // CSV Logging
-    const newRow = `${newBook._id},${newBook.book_author},${newBook.title}\n`;
-    const filePath = path.join(__dirname, 'Books.csv');
+    // // CSV Logging
+    // const newRow = `${newBook._id},${newBook.book_author},${newBook.title}\n`;
+    // const filePath = path.join(__dirname, 'Books.csv');
 
-    fs.appendFile(filePath, newRow, (err) => {
-      if (err) {
-        console.error('Error writing to CSV:', err);
-      } else {
-        console.log('Book added to CSV!');
-      }
-    });
+    // fs.appendFile(filePath, newRow, (err) => {
+    //   if (err) {
+    //     console.error('Error writing to CSV:', err);
+    //   } else {
+    //     console.log('Book added to CSV!');
+    //   }
+    // });
 
     res.json("Data Submitted");
   } catch (error) {
@@ -955,46 +1052,24 @@ app.put("/api/books", upload.single("thumbnail"), async (req, res) => {
  
 
   
-  app.delete("/api/books/:id", async (req, res) => {
-    const bookId = req.params.id;
-  
-    try {
-      // 1. Delete from MongoDB
-      await Book.deleteOne({ _id: bookId });
-  
-      // 2. Read the CSV file and filter out the deleted book
-      const csvFilePath = path.join(__dirname, 'Books.csv');
-      const records = [];
-  
-      fs.createReadStream(csvFilePath)
-        .pipe(csv())
-        .on('data', (data) => {
-          if (data.BookId !== bookId) { // Assuming BookId in CSV matches MongoDB _id
-            records.push(data);
-          }
-        })
-        .on('end', () => {
-          // 3. Rewrite the CSV without the deleted book
-          const csvWriter = createCsvWriter({
-            path: csvFilePath,
-            header: Object.keys(records[0] || {}).map(key => ({ id: key, title: key }))
-          });
-  
-          csvWriter.writeRecords(records)
-            .then(() => {
-              res.json("Successfully deleted book and updated CSV.");
-            })
-            .catch((err) => {
-              console.error("Error writing CSV:", err);
-              res.status(500).json({ error: "Failed to update CSV file." });
-            });
-        });
-  
-    } catch (error) {
-      console.error("Error deleting book:", error);
-      res.status(500).json({ error: "Failed to delete book." });
+ app.delete("/api/books/:id", async (req, res) => {
+  const bookId = req.params.id;
+
+  try {
+    const result = await Book.deleteOne({ _id: bookId });
+
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ message: "Book not found." });
     }
-  });
+
+    console.log("Book deleted");
+    res.json({ message: "Book successfully deleted." });
+  } catch (error) {
+    console.error("Error deleting book:", error);
+    res.status(500).json({ error: "Failed to delete book." });
+  }
+});
+
 
 
 
@@ -1154,9 +1229,11 @@ app.post("/reset-password/:id/:token", async (req, res) => {
 
 app.get("/getAllUser", async (req, res) => {
   try {
+    console.log("hi");
     const allUser = await User.find({});
     res.send({ status: "ok", data: allUser });
   } catch (error) {
+    console.log("hII");
     console.log(error);
   }
 });

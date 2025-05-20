@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-
+import './Rating.css';
 function RateBook({ userId }) {
   const navigate = useNavigate();
   const { id } = useParams();  // book ID from route
@@ -25,7 +25,7 @@ function RateBook({ userId }) {
         setSubmitted(true);
 
       } else {
-        alert("already rated");
+        alert("This Book Is Already rated by You");
       }
     } catch (error) {
       console.error("Error submitting rating:", error);
@@ -34,43 +34,33 @@ function RateBook({ userId }) {
   };
 
   return (
-    <div style={{ textAlign: 'center', margin: '20px' }}>
-      <h3>Give a rating</h3>
+    <div className="rating-container">
+  <h3 className="rating-heading">Give a Rating</h3>
 
-      {submitted ? (
-        <p>Rating submitted successfully!</p>
-      ) : (
-        <form
-          className="bookdetails"
-          onSubmit={rateBook}
-          style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
-        >
-          <div style={{ marginBottom: '10px' }}>
-            <label style={{ marginRight: '10px' }}>Rating (1-5):</label>
-            <input
-              type="number"
-              min="1"
-              max="5"
-              value={rating}
-              onChange={(e) => setRating(e.target.value)}
-              required
-            />
-          </div>
+  {submitted ? (
+    <p className="rating-success-message">✅ Rating submitted successfully!</p>
+  ) : (
+    <form className="rating-form" onSubmit={rateBook}>
+      <div className="rating-input-group">
+        <label htmlFor="rating">Rating (1–10):</label>
+        <input
+          id="rating"
+          type="number"
+          min="1"
+          max="10"
+          value={rating}
+          onChange={(e) => setRating(e.target.value)}
+          required
+        />
+      </div>
 
-          <input
-            type="submit"
-            value="Submit Rating"
-            style={{
-              backgroundColor: '#007bff',
-              color: '#fff',
-              border: 'none',
-              padding: '5px 10px',
-              cursor: 'pointer',
-            }}
-          />
-        </form>
-      )}
-    </div>
+      <button type="submit" className="rating-submit-button">
+        Submit Rating
+      </button>
+    </form>
+  )}
+</div>
+
   );
 }
 

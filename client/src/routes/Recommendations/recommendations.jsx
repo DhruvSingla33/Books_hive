@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import Fuse from "fuse.js";
 import bg from "./recc.jpg";
 import { ContainerPropsProvider } from "@chakra-ui/react";
+import './Recomm.css';
 
 function Recommendations() {
     const baseUrl = "http://localhost:8000/api/books";
@@ -53,7 +54,7 @@ const endpoint = "/api/books";
           })
           .catch((err) => {
             console.error(err);
-            setError(err.message);
+         
             if (err.message === "Book not found") {
               alert("Book not found");
             }
@@ -117,7 +118,7 @@ const endpoint = "/api/books";
           })
           .catch((err) => {
             console.error(err);
-            setError(err.message);
+            // setError(err.message);
             if (err.message === "Book not found") {
               alert("Book not found");
             }
@@ -207,138 +208,101 @@ const endpoint = "/api/books";
     if (isLoading) return <p>Loading...</p>;
     if (error) return <p style={{ color: "red" }}>{error}</p>;
 
-    return (
-        <div>
-            <h2 style={{ color: "lightgreen" }}>Search Engine for Books: </h2>
-            <form>
-                <input
-                    type="text"
-                    placeholder="Search..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                />
-            </form>
+   
+        return (
+  <div className="recommendation-container">
+    <h2 className="section-title">Search Engine for Books</h2>
+    <form className="search-form">
+      <input
+        type="text"
+        placeholder="Search..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
+    </form>
 
-            {searchTerm !== "" && (
-                <div className="search-results-container">
-                    <ul>
-                        {searchResults.map((item) => (
-                            <li key={item._id}>
-                                <Link to={`../books/${item._id}`}>
-                                    <h4>{item.title}</h4>
-                                </Link>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            )}
-
-            <h1 style={{ color: "violet" }}>Recommendation System</h1>
-            <span style={{ color: "cyan" }}>
-                <li><u>Data Collection and Preprocessing:</u></li>
-            </span> Gather and clean user data, such as preferences and interactions with items.
-            <br /><br />
-            <span style={{ color: "cyan" }}>
-                <li><u>User and Item Representation:</u></li>
-            </span> Create structured profiles for users and items, often using techniques like embeddings or matrix factorization.
-            <br /><br />
-            <span style={{ color: "cyan" }}>
-                <li><u>Data Splitting:</u></li>
-            </span> Divide the data into training, validation, and test sets for model evaluation.
-            <br /><br />
-            <span style={{ color: "cyan" }}>
-                <li><u>Recommendation Algorithms:</u></li>
-            </span> Choose the core algorithms for making recommendations, like Collaborative Filtering or Content-Based Filtering.
-            <br /><br />
-            <span style={{ color: "lightgreen" }}>
-                These components work together to build a recommendation system that suggests items to users based on their preferences and behavior.
-            </span>
-            <br /><br /><br />
-            <img src={bg} alt="girl-with-sword" style={{ borderRadius: "5px" ,width:"1200px"}} /> <br /><br />
-            <div className="p-4">
-      
-
-      
-    </div>
-    <h1 style={{ marginTop: "200px" }} className="text-xl font-bold mb-4">
-  content based Recommendations
-</h1>
-
-        {/* Input Form */}
-        <form onSubmit={handleSubmit1} className="mb-4">
-          <input
-            type="text"
-            value={bookName1}
-            onChange={handleInputChange1}
-            placeholder="Enter book name"
-            className="border p-2 rounded"
-          />
-          <button type="submit" className="ml-2 bg-blue-500 text-white px-4 py-2 rounded">
-            Get Recommendations
-          </button>
-        </form>
-  
-        {/* Display Error */}
-        {error && <p className="text-red-500">{error}</p>}
-  
-        {/* Display Recommendations */}
-        {collrecommendations.length === 0 && !error ? (
-          <p>No recommendations available yet.</p>
-        ) : (
-          <div className="search-results-container">
-          <ul>
-                          {collrecommendations.map((item) => (
-                              <li key={item.book_id}>
-                                  <Link to={`../books/${item.book_id}`}>
-                                      <h4>{item.title}</h4>
-                                  </Link>
-                              </li>
-                          ))}
-                      </ul>
-                      </div>
-        )}
-        
-      
-        <h1 style={{ marginTop: "200px" }} className="text-xl font-bold mb-4">
-  Hybrid Recommendations
-</h1>
-
-
-
-      {/* Input Form */}
-      <form onSubmit={handleSubmit2} className="mb-4">
-        <input
-          type="text"
-          value={bookName2}
-          onChange={handleInputChange2}
-          placeholder="Enter book name"
-          className="border p-2 rounded"
-        />
-        <button type="submit" className="ml-2 bg-blue-500 text-white px-4 py-2 rounded">
-          Get Recommendations
-        </button>
-      </form>
-
-      {/* Display Error */}
-      {error && <p className="text-red-500">{error}</p>}
-
-      {/* Display Recommendations */}
-      {hybridrecommendations.length === 0 && !error ? (
-        <p>No recommendations available yet.</p>
-      ) : (
-        <div className="search-results-container">
+    {searchTerm !== "" && (
+      <div className="search-results">
         <ul>
-                        {hybridrecommendations.map((item) => (
-                            <li key={item.book_id}>
-                                <Link to={`../books/${item.book_id}`}>
-                                    <h4>{item.title}</h4>
-                                </Link>
-                            </li>
-                        ))}
-                    </ul>
-                    </div>
-      )}
-        </div>
+          {searchResults.map((item) => (
+            <li key={item._id}>
+              <Link to={`../books/${item._id}`}>
+                <h4>{item.title}</h4>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+
+    <section className="recommendation-info">
+      <h1>Recommendation System</h1>
+      <ul>
+        <li><span>Data Collection and Preprocessing:</span> Gather and clean user data.</li>
+        <li><span>User and Item Representation:</span> Create profiles using embeddings or matrix factorization.</li>
+        <li><span>Data Splitting:</span> Use training, validation, and test sets.</li>
+        <li><span>Recommendation Algorithms:</span> Use Collaborative or Content-Based Filtering.</li>
+      </ul>
+      <p className="note">
+        These components build a system that suggests items based on user behavior.
+      </p>
+    </section>
+
+    <img src={bg} alt="Recommendation Visual" className="hero-image" />
+
+    {/* Content-based */}
+    <h2 className="section-subtitle">Content Based Recommendations</h2>
+    <form onSubmit={handleSubmit1} className="recommend-form">
+      <input
+        type="text"
+        value={bookName1}
+        onChange={handleInputChange1}
+        placeholder="Enter book name"
+      />
+      <button type="submit">Get Recommendations</button>
+    </form>
+    {error && <p className="error">{error}</p>}
+    {collrecommendations.length > 0 && (
+      <div className="search-results">
+        <ul>
+          {collrecommendations.map((item) => (
+            <li key={item.book_id}>
+              <Link to={`../books/${item.book_id}`}>
+                <h4>{item.title}</h4>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+
+    {/* Hybrid */}
+    <h2 className="section-subtitle">Hybrid Recommendations</h2>
+    <form onSubmit={handleSubmit2} className="recommend-form">
+      <input
+        type="text"
+        value={bookName2}
+        onChange={handleInputChange2}
+        placeholder="Enter book name"
+      />
+      <button type="submit">Get Recommendations</button>
+    </form>
+    {error && <p className="error">{error}</p>}
+    {hybridrecommendations.length > 0 && (
+      <div className="search-results">
+        <ul>
+          {hybridrecommendations.map((item) => (
+            <li key={item.book_id}>
+              <Link to={`../books/${item.book_id}`}>
+                <h4>{item.title}</h4>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+  </div>
+
     );
 }
 

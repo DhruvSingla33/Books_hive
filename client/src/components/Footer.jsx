@@ -1,20 +1,67 @@
-import React from 'react'
-import { BsFacebook, BsGithub, BsLinkedin, BsReddit, BsTwitter } from "react-icons/bs"
-import { SiMyanimelist } from "react-icons/si";
+import React from "react";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './Footer.css';
+
+import { Container, Row, Col } from "react-bootstrap";
+import {
+  AiFillGithub,
+  AiOutlineTwitter,
+  AiFillInstagram,
+} from "react-icons/ai";
+import { FaLinkedinIn } from "react-icons/fa";
+import { MdEmail } from "react-icons/md";
 
 function Footer() {
+  const year = new Date().getFullYear();
+
   return (
-    <footer style={{padding:"10px"}}>
-        &copy; Copyright { new Date().getFullYear() } <br /> <br /> 
-        <div style={{display:"inline-flex", alignItems:"center"}}>
-          {/* <a href='https://twitter.com/home' target='_blank'><BsTwitter size={20} style={{display:"inline-block", width:"30px"}} /></a>
-          <a href='https://reddit.com' target='_blank'><BsReddit size={20} style={{display:"inline-block", width:"30px"}}/></a>
-          <a href='https://www.linkedin.com/in/dhruva-upadhyaya-94681726b/' target='_blank'><BsLinkedin size={20} style={{display:"inline-block", width:"30px"}}/></a>
-          <a href='https://github.com/dhruva4869' target='_blank'><BsGithub size={20} style={{display:"inline-block", width:"30px"}}/></a> */}
-          {/* <SiMyanimelist /> */}
-        </div>
+    <footer className="footer">
+      <Container>
+        <Row className="footer-content">
+          <Col md={4} className="footer-text">
+            <p>Designed & Developed by <strong>Dhruv Singla</strong></p>
+          </Col>
+          <Col md={4} className="footer-text">
+            <p>© {year} DS. All rights reserved.</p>
+          </Col>
+          <Col md={4} className="footer-social">
+            <ul className="social-links">
+              <li>
+                <a
+                  href="https://github.com/DhruvSingla33/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="GitHub"
+                >
+                  <AiFillGithub />
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://www.linkedin.com/in/dhruv-singla30/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="LinkedIn"
+                >
+                  <FaLinkedinIn />
+                </a>
+              </li>
+              <li>
+                <a
+                  href="mailto:singladhruv301@gmail.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Email"
+                >
+                  <MdEmail />
+                </a>
+              </li>
+            </ul>
+          </Col>
+        </Row>
+      </Container>
     </footer>
-  )
+  );
 }
 
-export default Footer
+export default Footer;

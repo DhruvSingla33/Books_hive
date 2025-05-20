@@ -3,12 +3,12 @@ import { Link, useParams } from "react-router-dom"
 import { BsPencilSquare } from "react-icons/bs"
 import RateBook from "./rateBook";
 import './singlebook.css';
+import CommentSection from "./Comments";
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const endpoint = "/api/books/";
 
 function singleBook() {
     const [showComponent, setShowComponent] = useState(false);
-    const [commentText, setCommentText] = useState("");
     const [refreshData, setRefreshData] = useState(false);
     const handleButtonClick = () => {
       setShowComponent(true);
@@ -149,245 +149,131 @@ function singleBook() {
           });
       };
      
-      const postComment = async () => {
-        console.log("hii");
-        console.log("comment");
-        const res = await fetch(`${BASE_URL}/api/books/${id}/comments`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            username: userData.name || userData.email,  // or username if available
-            text: commentText,
-          }),
-        });
-         
-        const result = await res.json();
-        console.log(result);
-        if (result.message === "Comment added") {
-          setCommentText("");
-          setRefreshData(prev => !prev); // 🔁 trigger re-fetch
-          alert("comment added");
-        } else {
-          alert("Failed to post comment");
-        }
-      
-      };
+    
       
       
 
   return (
-    <div className="user-details-container">
-  
- 
-  {/* Rest of your component */}
+   
+   <div className="book-details-wrapper">
 
-  <h1 className="user-type">{userData.userType}</h1>
-  <div className="book-details">
-    <div className="col-1">
+  {/* TOP SECTION */}
+  <div className="book-top-section">
+    <div className="book-left-column">
       <img
-        src={`${BASE_URL}/uploads/${data?.thumbnail}`}
+        src={`${data?.thumbnail}`}
         alt={data?.title}
         className="book-thumbnail"
       />
-        {data?.pdf && (
-    <a
-      href={`${BASE_URL}/uploads/${data?.pdf}`}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="pdf-link"
-    >
-      📄 View PDF
-    </a>
-  )}
-      {(admin|| teacher) ? (
-       <>
 
-       </>
-      ) : ( 
-      <div className="button-container">
-        <button onClick={issueBook} className="issue-button">
-          Issue
-        </button>
-      </div>)}
-      {(teacher) ? (
-       <div className="button-container">
-       <button onClick={suggestBook} className="issue-button">
-         Suggest Book
-       </button>
-     </div>
-      ) : ( <>
-      </>
+      {data?.pdf && (
+        <a
+          href={`${BASE_URL}/uploads/${data?.pdf}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="pdf-button"
+        >
+          📄 View PDF
+        </a>
       )}
-    </div>
 
-    <div className="col-2">
-      <h1 className="book-title">Book Title: {data?.title}</h1>
-      <p className="book-description">{data?.description}</p>
-      {/* <h1 className="user-email">{userData.email}</h1> */}
-      <StarRating numberOfStars={data?.stars} />
-      <p className="category-title">Category</p>
-      <ul className="category-list">
-      
-        {data?.category?.map((item, index) => (
-          <li key={index} className="category-item">
-             {item}
-          </li>
-        ))}
-
-      </ul>
-      {admin ? (
-        <Link to={`/editbook/${data._id}`} className="edit-book-link">
-          Edit Book <BsPencilSquare size={20} />
-        </Link>
-      ) : (
-        
-        <div>
-      
-      <div className="button-container">
-        {setShowComponent ? (
-          <RateBook  userId={userData._id}/>
-        ) : (
-          <button onClick={handleButtonClick} className="rate-book-button">
-            hoti 
+      {(admin || teacher) ? null : (
+        <div className="action-button-container">
+          <button onClick={issueBook} className="primary-button">
+            Issue
           </button>
-        )}
-      </div>
-    </div>
-          
-        
-          
-        
+        </div>
+      )}
+
+      {teacher && (
+        <div className="action-button-container">
+          <button onClick={suggestBook} className="primary-button">
+            Suggest Book
+          </button>
+        </div>
       )}
     </div>
-  </div>
-  <Link to="/books" className="link-back">🔙 Books</Link>
-  
 
-  <div
-  className="comment-section"
-  style={{
-    marginTop: "2rem",
-    padding: "1.5rem",
-    backgroundColor:  "#6CB4EE",
-    borderRadius: "12px",
-    maxWidth: "800px",
-    margin: "2rem auto",
-  }}
->
-  <h2 style={{ marginBottom: "1rem", color: "#333" }}>Comments</h2>
+    <div className="book-right-column">
+  <h1 className="book-title1">{data?.title}</h1>
 
-  <form
-    onSubmit={(e) => {
-      e.preventDefault();
-      if (!commentText) return;
-      postComment();
-    }}
-    style={{
-      display: "flex",
-      flexDirection: "column",
-      gap: "0.75rem",
-      marginBottom: "1.5rem",
-    }}
-  >
-    <textarea
-      rows="3"
-      placeholder="Write a comment..."
-      value={commentText}
-      onChange={(e) => setCommentText(e.target.value)}
-      style={{
-        padding: "0.75rem",
-        borderRadius: "8px",
-        border: "1px solid #ccc",
-        fontSize: "1rem",
-        resize: "vertical",
-      }}
-    />
-    <button
-      type="submit"
-      style={{
-        backgroundColor: "#007bff",
-        color: "#fff",
-        padding: "0.5rem 1rem",
-        border: "none",
-        borderRadius: "6px",
-        fontSize: "1rem",
-        cursor: "pointer",
-        alignSelf: "flex-start",
-      }}
-    >
-      Post Comment
-    </button>
-  </form>
+  {data?.book_author && (
+    <p className="book-author1">
+      <strong>Author:</strong> {data.book_author}
+    </p>
+  )}
 
-  <div
-    className="comment-list"
-    style={{
-      backgroundColor: "#fff",
-      padding: "1rem",
-      borderRadius: "10px",
-      boxShadow: "0 2px 6px rgba(0, 0, 0, 0.1)",
-    }}
-  >
-    {data?.comments?.length > 0 ? (
-  data.comments.map((comment, index) => (
-    <div
-      key={index}
-      className="comment-item"
-      style={{
-        display: "flex",
-        alignItems: "flex-start",
-        gap: "1rem",
-        marginBottom: "1rem",
-        backgroundColor: "#e6f0ff",
-        padding: "1rem",
-        borderRadius: "8px",
-        boxShadow: "0 2px 5px rgba(0,0,0,0.05)",
-      }}
-    >
-      {/* Profile Circle / Initial */}
-      <div
-        style={{
-          backgroundColor: "#007bff",
-          color: "#fff",
-          width: "40px",
-          height: "40px",
-          borderRadius: "50%",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          fontWeight: "bold",
-          fontSize: "1rem",
-          flexShrink: 0,
-        }}
-      >
-        {comment.username.charAt(0).toUpperCase()}
-      </div>
+  {data?.description && (
+    <p className="book-description1">
+      <strong>Discription:</strong> {data.description}
+      </p>
+  )}
 
-      {/* Comment Content */}
-      <div style={{ flex: 1 }}>
-        <div style={{ marginBottom: "0.3rem" }}>
-          <strong style={{ color: "#333", fontSize: "1rem" }}>
-            {comment.username}
-          </strong>
-          <small style={{ marginLeft: "0.5rem", color: "#888" }}>
-            {new Date(comment.date).toLocaleString()}
-          </small>
-        </div>
-        <p style={{ margin: 0, color: "#444", fontSize: "0.95rem" }}>
-          {comment.text}
-        </p>
-      </div>
-    </div>
-  ))
+  {(data?.book_rating || data?.rating_count) && (
+    <div className="book-rating-info">
+   
+      {data?.rating_count > 0 ? (
+  <p>
+    <strong>Average Rating:</strong>{" "}
+    {(data.book_rating / data.rating_count).toFixed(1)} ⭐
+  </p>
 ) : (
-  <p style={{ color: "#777" }}>No comments yet.</p>
+  <p>
+    <strong>Average Rating:</strong> N/A ⭐
+  </p>
 )}
 
+<p>
+  <strong>Rated by:</strong> {data?.rating_count || 0} user(s)
+</p>
+     
+    </div>
+  )}
+
+ 
+  {data?.category?.length > 0 && (
+    <>
+      <p className="category-heading1">Categories</p>
+      <ul className="category-list1">
+        {data.category.map((item, index) => (
+          <li key={index} className="category-chip1">
+            {item}
+          </li>
+        ))}
+      </ul>
+    </>
+  )}
+
+  {admin ? (
+    <Link to={`/editbook/${data._id}`} className="edit-book-link">
+      Edit Book <BsPencilSquare size={20} />
+    </Link>
+  ) : (
+       <>
+       </>
+     ) }
+  
+
+
+  <Link to="/books" className="back-link">🔙 Back to Books</Link>
+</div>
+
   </div>
+
+  {/* BOTTOM SECTION */}
+  <div className="book-bottom-section">
+    
+    <CommentSection
+      bookId={id}
+      comments={data?.comments || []}
+      userData={userData}
+      refresh={() => setRefreshData(prev => !prev)}
+    />
+     <RateBook userId={userData._id} />
+  </div>
+
 </div>
-</div>
+
 
   )
 }

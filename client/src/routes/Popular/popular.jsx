@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
-
+import './popular.css';
 
 function Popular() {
      const BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -40,7 +40,8 @@ function Popular() {
 
     data.forEach((item) => {
         // const score = item.rating_count !== 0 ? item.book_rating / item.rating_count : 1;
-        const score = item.book_rating / item.rating_count 
+        const score = item.rating_count ? item.book_rating / item.rating_count : 0;
+
         top.push([score, item.title, item.thumbnail,item._id,item.rating_count,item.book_rating]);
     });
     
@@ -49,50 +50,31 @@ function Popular() {
   return (
     <div>
         <h1>Popular Books</h1>
-        {/* <pre>{JSON.stringify(data)}</pre> */}
+        
 
-        {/* <ul className="books">
-            {data.map((item) => (
-                <li key={item._id}>
-                <Link to={`/books/${item.slug}`}>
-                    <img
-                    src={`http://localhost:8000/uploads/${item.thumbnail}`}
-                    alt={item.title}
-                    />
-                    <h3>{item.title} ➡️ {item.stars} ⭐</h3>
-                </Link>
-
-                </li>
-            ))}
-            </ul>  */}
+       
 
 
-        <ul className="books">
-        {top.map(([score, title, image,id,rating_count,rating]) => (
-            <li key={id}>
-                <Link to={`../books/${id}`}>
-                <img
-            src={`${BASE_URL}/uploads/${image}`}
-            alt={title}
-            />
-            <h4>{title} ➡️ {score}  ⭐</h4>
-                                                </Link>
-            
-            
-
-            </li>
-        ))}
-        </ul> 
+        <div className="popular-container">
+  {top.map(([score, title, image, id, rating_count, rating]) => (
+    <Link to={`../books/${id}`} key={id} className="books-card">
+      <img
+        src={`${image}`}
+        alt={title}
+        className="books-image"
+      />
+      <div className="books-content">
+        <h3 className="books-title">{title}</h3>
+        <p className="books-rating">
+          Rating: <strong>{score.toFixed(2)}</strong> ⭐ ({rating_count} votes)
+        </p>
+      </div>
+    </Link>
+  ))}
+</div> 
 
         
-        {/* <ul style={{color:"violet"}}>
-            {top.map(([stars, title, image]) => (
-                <li key={title}>
-                {title} - {stars}
-                
-                </li>
-            ))}
-        </ul> */}
+   
 
         
 

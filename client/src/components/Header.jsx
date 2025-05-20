@@ -29,7 +29,7 @@ function Header() {
           <div>
             {kp ? (
          <div className="nav-group">
-  <NavLink to="/books">Books</NavLink>
+  {/* <NavLink to="/books">Books</NavLink> */}
   <NavLink to="/teachers">Teachers</NavLink>
   <NavLink to="/recommendations">Recommendation</NavLink>
   <NavLink to="/popular">Popular</NavLink>
