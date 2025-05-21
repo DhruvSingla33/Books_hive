@@ -209,7 +209,7 @@ function singleBook() {
       </p>
   )}
 
-  {(data?.book_rating || data?.rating_count) && (
+  {(data?.book_rating !== undefined || data?.rating_count !== undefined) && (
     <div className="book-rating-info">
    
       {data?.rating_count > 0 ? (
@@ -219,7 +219,7 @@ function singleBook() {
   </p>
 ) : (
   <p>
-    <strong>Average Rating:</strong> N/A ⭐
+    <strong>Average Rating:</strong> 0 ⭐
   </p>
 )}
 
@@ -255,7 +255,7 @@ function singleBook() {
   
 
 
-  <Link to="/books" className="back-link">🔙 Back to Books</Link>
+  {/* <Link to="/books" className="back-link">🔙 Back to Books</Link> */}
 </div>
 
   </div>

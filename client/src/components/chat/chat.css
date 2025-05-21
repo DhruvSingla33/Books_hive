@@ -1,0 +1,37 @@
+/* ScrollableChat.css */
+
+.message-wrapper {
+  display: flex;
+  align-items: flex-end;
+  padding: 0 8px;
+}
+
+.chat-avatar {
+  border: 1px solid #3182ce;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.15);
+}
+
+.message-bubble {
+  padding: 10px 16px;
+  border-radius: 20px;
+  max-width: 70%;
+  font-size: 0.9rem;
+  font-weight: 500;
+  line-height: 1.4;
+  color: #2d3748;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  word-wrap: break-word;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.own-message {
+  background: linear-gradient(135deg, #bee3f8, #90cdf4);
+  align-self: flex-end;
+  margin-left: auto;
+}
+
+.other-message {
+  background: linear-gradient(135deg, #c6f6d5, #9ae6b4);
+  align-self: flex-start;
+}

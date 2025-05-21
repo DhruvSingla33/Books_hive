@@ -9,7 +9,7 @@ import axios from "axios";
 import ScrollableChat from "./ScrollableChat";
 import Lottie from "react-lottie";
 import animationData from "../animations/typing.json";
-
+import "./SingleChat.css";
 import io from "socket.io-client";
 
 const ENDPOINT = import.meta.env.VITE_API_BASE_URL; // "https://talk-a-tive.herokuapp.com"; -> After deployment
@@ -190,55 +190,40 @@ const SingleChat = () => {
     }, timerLength);
   };
 return (<>
-{/* <> <h1>{User.fname} </h1></> */}
-<Box
-  display="flex"
-  flexDir="column"
-  justifyContent="flex-end"
-  p={3}
-  bg="#E8E8E8"
-  w="99.5%"
-  h="400px"           // 👈 fixed height here
-  borderRadius="lg"
-  overflowY="hidden"
->
 
-            
-              <div className="messages">
-              <ScrollableChat messages={messages} user={User} />
-              </div>
-          
+<h1 className="chat-heading">💬 real-Time Chat with Socket.IO</h1>
 
-            <FormControl
-              onKeyDown={sendMessage}
-              id="first-name"
-              isRequired
-              mt={3}
-            >
-              {istyping ? (
-                <div>
-                  <Lottie
-                    options={defaultOptions}
-                    // height={50}
-                    width={70}
-                    style={{ marginBottom: 15, marginLeft: 0 }}
-                  />
-                </div>
-              ) : (
-                <></>
-              )}
-             <Input
-  variant="filled"
-  bg="blue.50" // or "#E3F2FD"
-  width="97%"
-  placeholder="Enter a message..."
-  value={newMessage}
-  onChange={typingHandler}
- 
-/>
+<div className="chat-container">
+  <div className="messages-area">
+    {messages.length === 0 ? (
+      <div className="no-messages">No messages yet. Start the conversation!</div>
+    ) : (
+      <div className="messages">
+        <ScrollableChat messages={messages} user={User} />
+      </div>
+    )}
+  </div>
 
-            </FormControl>
-          </Box>
+  <div className="custom-input-wrapper" onKeyDown={sendMessage}>
+    {istyping && (
+      <div className="typing-indicator">
+        <Lottie
+          options={defaultOptions}
+          width={70}
+          style={{ marginBottom: 15, marginLeft: 0 }}
+        />
+      </div>
+    )}
+    <input
+      type="text"
+      className="custom-chat-input"
+      placeholder="Type your message..."
+      value={newMessage}
+      onChange={typingHandler}
+    />
+  </div>
+</div>
+
 </>)};
 
 

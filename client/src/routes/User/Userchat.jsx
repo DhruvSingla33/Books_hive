@@ -70,7 +70,7 @@ function Userchat() {
   if (error) return <p style={{ color: "red" }}>{error}</p>;
 
   return (
-    <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
+    <div style={{ padding: "20px", fontFamily: "Arial, sans-serif",  minHeight: "100vh", }}>
       <h2 style={{ textAlign: "center", color: "#4CAF50" }}>Your Chats</h2>
       {chats.length > 0 ? (
         <ul style={{ listStyle: "none", padding: 0 }}>

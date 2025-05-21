@@ -1,7 +1,7 @@
-/* Features.css */
+
 
 .features-section {
-  background-color: white; /* Set section background to white */
+  background-color: white; 
   padding: 60px 20px;
   text-align: center;
 }
@@ -20,12 +20,14 @@
 }
 
 .feature-card {
-  background-color: #d0f0e0; /* Light mint green (previous section color) */
+  background-color: #d0f0e0; 
   border-radius: 15px;
   padding: 25px;
   max-width: 300px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  text-align: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .feature-card:hover {
@@ -41,16 +43,18 @@
 }
 
 .feature-card h3 {
-  font-size: 1.2rem;
-  color: #2e7d32;
+  font-size: 1.3rem;
+  color: #1b5e20;
   margin-bottom: 10px;
 }
 
 .feature-card p {
-  font-size: 0.95rem;
-  color: #444;
+  font-size: 1rem;
+  color: #333; 
   margin-bottom: 20px;
+  line-height: 1.5;
 }
+
 
 .feature-card button {
   background-color: #2e7d32;

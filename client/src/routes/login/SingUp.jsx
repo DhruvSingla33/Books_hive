@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "./Login.css"; // Reusing Login.css
-import sideImage from '../../assets/SideImage001.png';
+import sideImage from '../../assets/SideImage.png';
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const endpoint = "/register";
 
@@ -123,13 +123,16 @@ export default function SignUp() {
           </form>
         </div>
         <div className="auth-right">
-          <img src={sideImage} alt="Background" />
-          <h3>Join the community today!</h3>
-          <p>
-            Collaborate, learn, and grow with our platform built for users,
-            teachers, and admins.
-          </p>
-        </div>
+  <img src={sideImage} alt="Background" />
+  <h3>Experience Book Hive in Action</h3>
+  <p>
+    Discover how Book Hive empowers students, educators, and administrators through seamless collaboration and resource sharing.
+  </p>
+  <p style={{ marginTop: '1rem', color: '#2e7d32', fontWeight: '500' }}>
+    Just exploring? You can <strong>sign in directly</strong> using a sample recruiter ID — no registration required.
+  </p>
+</div>
+
       </div>
     </div>
   );

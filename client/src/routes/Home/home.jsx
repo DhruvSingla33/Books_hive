@@ -19,7 +19,7 @@ const Home = () => {
           <p>
            Your one-stop e-book library platform for learning and collaboration.
           </p>
-          <button className="cta-button">Get Consultation</button>
+          {/* <button className="cta-button">Get Consultation</button> */}
         </div>
       </div>
 

@@ -27,6 +27,7 @@ function UserDetail(props) {
     padding: "2rem",
     backgroundColor: "#f9f9f9",
     maxWidth: "1200px",
+     minHeight: "100vh",
     margin: "0 auto",
     borderRadius: "8px",
   };

@@ -2,24 +2,25 @@ import React from "react";
 import "./Feature.css";
 import { motion } from "framer-motion";
 import Feature1 from '../../assets/feature01.png'
+import Feature2 from '../../assets/feature02.png'
 import Feature3 from '../../assets/feature03.png'
 const features = [
   {
-    title: "Communications",
+    title: "💬 Real-time Chat",
     description:
-      "Pretium lectus quam id leo in vitae turpis. Mattis pellentesque id nibh tortor id.",
+      "Socket.IO-based chat between teachers and students for smooth communication.",
     image: Feature1,
   },
   {
-    title: "Inspired Design",
+    title: "🧠 Hybrid Recommendation System",
     description:
-      "Nunc consequat interdum varius sit amet mattis vulputate enim nulla. Risus feugiat.",
-    image: "/images/design.png",
+      "Combines content-based and collaborative filtering to suggest personalized books.",
+    image: Feature2,
   },
   {
-    title: "Happy Customers",
+    title: "📬 Email Notifications",
     description:
-      "Nisl purus in mollis nunc sed id semper. Rhoncus aenean vel elit scelerisque mauris.",
+      "Nodemailer integration to send book issue confirmation emails to users.",
     image:  Feature3,
   },
 ];
@@ -41,7 +42,7 @@ export function Features()  {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7 }}
       >
-        Our Features & Services.
+        Top Features & Services.
       </motion.h2>
 
       <div className="features-container">
