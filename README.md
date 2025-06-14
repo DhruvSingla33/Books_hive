@@ -8,7 +8,7 @@ Bringing hybrid book recommendations, real-time communication, and role-based fe
 ## 🌟 Key Features
 
 - 📖 **Book Library**  
-  Browse, read, and manage a wide range of books.
+  Browse, and manage a wide range of books.
 
 - 🧠 **Hybrid Recommendation System**  
   Combines content-based and collaborative filtering to suggest personalized books.
